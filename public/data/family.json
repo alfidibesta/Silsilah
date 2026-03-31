@@ -1,20 +1,858 @@
+
 [
   {
-    "id": "1",
+    "id": 1,
     "name": "Mbah Kromoharjo",
     "spouse": null,
     "gen": 1,
     "parentId": null,
     "deceased": false,
-    "notes": "Kepala keluarga besar"
+    "comment": "Root"
   },
   {
-    "id": "2",
+    "id": 2,
     "name": "Suminah",
     "spouse": "Sadiran Hadisiswanto",
     "gen": 2,
-    "parentId": "1",
+    "parentId": 1,
     "deceased": true,
-    "notes": null
+    "comment": null
+  },
+  {
+    "id": 3,
+    "name": "Lilik Sulistyaningrum",
+    "spouse": "Yasir Khanif",
+    "gen": 3,
+    "parentId": 2,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 4,
+    "name": "Azis Khan Ardhian",
+    "spouse": "Ramadhanti Retna Mahardhi",
+    "gen": 4,
+    "parentId": 3,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 5,
+    "name": "Khaira Hasna Adzkia Arkhamy",
+    "spouse": null,
+    "gen": 5,
+    "parentId": 4,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 6,
+    "name": "Kanaya Zivarra Almeyda",
+    "spouse": null,
+    "gen": 5,
+    "parentId": 4,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 7,
+    "name": "Bayu Fajar Nugraha",
+    "spouse": "Anharul Hidayah",
+    "gen": 4,
+    "parentId": 3,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 8,
+    "name": "Ahmad Iskandar Narendra Jalaluddin Arka",
+    "spouse": null,
+    "gen": 5,
+    "parentId": 7,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 9,
+    "name": "Restu Acarya Abdillah",
+    "spouse": null,
+    "gen": 5,
+    "parentId": 7,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 10,
+    "name": "Aisharahma Shivantamurti",
+    "spouse": null,
+    "gen": 5,
+    "parentId": 7,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 11,
+    "name": "Wizurai Mahatma",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 3,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 12,
+    "name": "Endang Werdiningsih",
+    "spouse": "Hariyanto",
+    "gen": 3,
+    "parentId": 2,
+    "deceased": true,
+    "comment": null
+  },
+  {
+    "id": 13,
+    "name": "Wahyu Pungky Riyanto Putro",
+    "spouse": "Quroatul Akyuni",
+    "gen": 4,
+    "parentId": 12,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 14,
+    "name": "Aneesha Nimara Kanya",
+    "spouse": null,
+    "gen": 5,
+    "parentId": 13,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 15,
+    "name": "Aniek Djuwariyah",
+    "spouse": "Syakuril Anwar",
+    "gen": 3,
+    "parentId": 2,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 16,
+    "name": "Rizani Rifka Aulia",
+    "spouse": "M. Yogi Permana",
+    "gen": 4,
+    "parentId": 15,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 17,
+    "name": "Salwa Haura Nazhiva",
+    "spouse": null,
+    "gen": 5,
+    "parentId": 16,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 18,
+    "name": "Alvarendra Raidan Abgary",
+    "spouse": null,
+    "gen": 5,
+    "parentId": 16,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 19,
+    "name": "Faisal Amar",
+    "spouse": "Erwanda Selviana",
+    "gen": 4,
+    "parentId": 15,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 20,
+    "name": "M. Arrasya Ibrahim",
+    "spouse": null,
+    "gen": 5,
+    "parentId": 19,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 21,
+    "name": "Kurnia Putra Ardhiansyah",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 15,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 22,
+    "name": "Kurnia Putra Firmansyah",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 15,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 23,
+    "name": "Ida Nurchasanah",
+    "spouse": "Sujarwo",
+    "gen": 3,
+    "parentId": 2,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 24,
+    "name": "Ridwan Adhi Prayoga",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 23,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 25,
+    "name": "Rizky Khoirunisa",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 23,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 26,
+    "name": "Wahjudi Sudarso",
+    "spouse": "Sunarti",
+    "gen": 2,
+    "parentId": 1,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 27,
+    "name": "Diah Rohmatul Amin",
+    "spouse": "Khozin Abu Faqih",
+    "gen": 3,
+    "parentId": 26,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 28,
+    "name": "Abdul Hafidh Fayyadl",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 27,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 29,
+    "name": "Zidni Faidloka",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 27,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 30,
+    "name": "Faidl Mutawashil",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 27,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 31,
+    "name": "Nurvie Fuady",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 27,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 32,
+    "name": "Shafa Fuadia",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 27,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 33,
+    "name": "Mustafidl Khoiru",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 27,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 34,
+    "name": "Nayyira Fuadia",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 27,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 35,
+    "name": "Fatih Arga",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 27,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 36,
+    "name": "Nintu Latifa Amri",
+    "spouse": "Andik Widodo",
+    "gen": 3,
+    "parentId": 26,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 37,
+    "name": "Abdullah Daffa' Ad Dien Robbaanii",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 36,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 38,
+    "name": "Ainurrahman Daisaq Rafif Abdillah",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 36,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 39,
+    "name": "Razita Nawwarah",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 36,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 40,
+    "name": "Rohmi Khusnarini",
+    "spouse": "Dodik Supriyanto",
+    "gen": 3,
+    "parentId": 26,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 41,
+    "name": "Ghithrif Sulthan Ahsani",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 40,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 42,
+    "name": "Arvino Nazril Rashaad",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 40,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 43,
+    "name": "Rayyan Dzakki",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 40,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 44,
+    "name": "Kasmi",
+    "spouse": "Suharno",
+    "gen": 2,
+    "parentId": 1,
+    "deceased": true,
+    "comment": null
+  },
+  {
+    "id": 45,
+    "name": "Tutik M",
+    "spouse": "Kanang",
+    "gen": 3,
+    "parentId": 44,
+    "deceased": true,
+    "comment": null
+  },
+  {
+    "id": 46,
+    "name": "Ainul Purnama",
+    "spouse": "Herman",
+    "gen": 4,
+    "parentId": 45,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 47,
+    "name": "Aisyah Ammara",
+    "spouse": null,
+    "gen": 5,
+    "parentId": 46,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 48,
+    "name": "Nabil F.H",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 45,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 49,
+    "name": "Alfi A",
+    "spouse": "Adi R",
+    "gen": 3,
+    "parentId": 44,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 50,
+    "name": "Besta A",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 49,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 51,
+    "name": "Azima Zahra R",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 49,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 52,
+    "name": "Salis",
+    "spouse": "Udik",
+    "gen": 3,
+    "parentId": 44,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 53,
+    "name": "Y. Fahruqin",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 52,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 54,
+    "name": "Arka",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 52,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 55,
+    "name": "Adiba",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 52,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 56,
+    "name": "Sarminah",
+    "spouse": "Mustaqim",
+    "gen": 2,
+    "parentId": 1,
+    "deceased": true,
+    "comment": null
+  },
+  {
+    "id": 57,
+    "name": "Tohari Purwanto",
+    "spouse": "Siti Romlah",
+    "gen": 3,
+    "parentId": 56,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 58,
+    "name": "Sandy Alfaruq",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 57,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 59,
+    "name": "Ilham Maulana",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 57,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 60,
+    "name": "Andik Gustiana",
+    "spouse": "Yuyun Sulisytowati",
+    "gen": 3,
+    "parentId": 56,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 61,
+    "name": "Ardha Andika P.",
+    "spouse": "Sevinaria Dwi S.",
+    "gen": 4,
+    "parentId": 60,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 62,
+    "name": "Aksa Pandega Shankara",
+    "spouse": null,
+    "gen": 5,
+    "parentId": 61,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 63,
+    "name": "Ardhian Yudhika P",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 60,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 64,
+    "name": "Bambang Tri Muryanto",
+    "spouse": "Euis Anisa",
+    "gen": 3,
+    "parentId": 56,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 65,
+    "name": "Tristan Amar Tsaqib",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 64,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 66,
+    "name": "Firyal Alfath Arrayan",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 64,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 67,
+    "name": "Janeta Halwa Lakeisha",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 64,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 68,
+    "name": "Yuliana Catur Endrawati",
+    "spouse": "Budiono",
+    "gen": 3,
+    "parentId": 56,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 69,
+    "name": "Helmy Hendra Himawan",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 68,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 70,
+    "name": "Friska Junita Dewi",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 68,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 71,
+    "name": "Tuminah",
+    "spouse": "Jadi",
+    "gen": 2,
+    "parentId": 1,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 72,
+    "name": "Aang Adi Wahyu Utomo",
+    "spouse": "Evi Silvianti",
+    "gen": 3,
+    "parentId": 71,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 73,
+    "name": "Fathurahman Muhammad",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 72,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 74,
+    "name": "Fahira Nadine Aulia",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 72,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 75,
+    "name": "Dina Dwinitasari",
+    "spouse": "Samsudin",
+    "gen": 3,
+    "parentId": 71,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 76,
+    "name": "Annisa Najlaa Faiza",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 75,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 77,
+    "name": "Faiz Ali Alkhalifi",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 75,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 78,
+    "name": "Sahru Adi Kusnudin",
+    "spouse": "Risty Hidrovida",
+    "gen": 3,
+    "parentId": 71,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 79,
+    "name": "Zain Malik Ibrahim",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 78,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 80,
+    "name": "Yasna Malika Zahra",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 78,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 81,
+    "name": "Sudjono",
+    "spouse": "Sudarti",
+    "gen": 2,
+    "parentId": 1,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 82,
+    "name": "Eka Novita sari",
+    "spouse": "Yustinus Happy Miawanto",
+    "gen": 3,
+    "parentId": 81,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 83,
+    "name": "Yusuf Eka Wijaya",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 82,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 84,
+    "name": "Yunus Satria Wijaya",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 82,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 85,
+    "name": "Dedik Dwi Setiyono",
+    "spouse": null,
+    "gen": 3,
+    "parentId": 81,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 86,
+    "name": "Sunaryo",
+    "spouse": "Kamsiatun",
+    "gen": 2,
+    "parentId": 1,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 87,
+    "name": "Sony Priyo Pratomo",
+    "spouse": "Retno Sari Dewanti",
+    "gen": 3,
+    "parentId": 86,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 88,
+    "name": "Kenzio Nelzam Atazaki",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 87,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 89,
+    "name": "Arsenio Alfarizki Ibrahim",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 87,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 90,
+    "name": "Fendy Dwi Setiawan",
+    "spouse": "Deny Wahyu Vytaningrum",
+    "gen": 3,
+    "parentId": 86,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 91,
+    "name": "Dinar Azka Rajendra",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 90,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 92,
+    "name": "Sunarti",
+    "spouse": "Hariyanto",
+    "gen": 2,
+    "parentId": 1,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 93,
+    "name": "Defry A.S",
+    "spouse": null,
+    "gen": 3,
+    "parentId": 92,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 94,
+    "name": "Lya Dwi Hardyanti",
+    "spouse": "Faisal Ahmad Yanuar",
+    "gen": 3,
+    "parentId": 92,
+    "deceased": false,
+    "comment": null
+  },
+  {
+    "id": 95,
+    "name": "Faezya Belvina Arreta",
+    "spouse": null,
+    "gen": 4,
+    "parentId": 94,
+    "deceased": false,
+    "comment": null
   }
 ]
