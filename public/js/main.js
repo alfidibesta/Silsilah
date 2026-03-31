@@ -1,31 +1,25 @@
 /**
- * main.js — App controller
- * Uses sidebar inline form (prefix "f-") for all CRUD.
- * No duplicate modal form needed.
+ * main.js — Application controller
  */
 import {
   bootstrap, getAll, create, update, remove,
-  search, filterByParent, exportJSON, importJSON, resetToDefault,
+  search, exportJSON, resetToDefault,
 } from './api.js';
 
 import {
-  toast, openConfirm,
-  renderList, renderTree,
-  populateParentSelect, populateFilterSelect,
-  getFormData, setFormData, clearFormData,
-  renderStats,
+  toast, renderStats,
+  renderList, renderTextTree, renderVisualTree,
+  openDetailModal, openAddModal, openConfirm,
+  populateFilterSelect,
 } from './ui.js';
 
 /* ── state ───────────────────────────────────── */
-let viewMode    = 'tree';
+let viewMode    = 'vtree';   // 'vtree' | 'ttree' | 'list'
 let searchQuery = '';
 let filterPid   = '__all__';
-let editingId   = null;           // null = add mode
 let expandedSet = new Set();
 
-const PREFIX = 'f';               // sidebar form prefix
-
-/* ── derive list ─────────────────────────────── */
+/* ── derived list ────────────────────────────── */
 function currentList() {
   let list = searchQuery ? search(searchQuery) : getAll();
   if (filterPid && filterPid !== '__all__')
@@ -33,63 +27,41 @@ function currentList() {
   return list;
 }
 
-/* ── refresh ──────────────────────────────────── */
+/* ── refresh all views ───────────────────────── */
 function refresh() {
   renderStats();
   populateFilterSelect();
   const list = currentList();
-  if (viewMode === 'list') renderList(list, startEdit, startDelete);
-  else                     renderTree(list, startEdit, startDelete, expandedSet);
+  if (viewMode === 'list')   renderList(list, id => openDetail(id));
+  else if (viewMode === 'ttree') renderTextTree(list, id => openDetail(id), expandedSet);
+  else                       renderVisualTree(list, id => openDetail(id));
 }
 
-/* ── CRUD: add ────────────────────────────────── */
-function startAdd() {
-  editingId = null;
-  clearFormData(PREFIX);
-  populateParentSelect(PREFIX, null);
-  document.getElementById('sidebar-form-title').textContent = '✚ Tambah Anggota';
-  document.getElementById('f-name').focus();
+/* ── open detail / edit ──────────────────────── */
+function openDetail(id) {
+  openDetailModal(
+    id,
+    (id, patch) => {
+      update(id, patch);
+      toast(`✓ ${patch.name} diperbarui`);
+      refresh();
+    },
+    (id) => {
+      const m = getAll().find(x=>x.id===id);
+      openConfirm(m?.name ?? '?', () => {
+        remove(id);
+        toast(`${m?.name} dihapus`, 'warn');
+        refresh();
+      });
+    }
+  );
 }
 
-/* ── CRUD: edit ───────────────────────────────── */
-function startEdit(id) {
-  editingId = id;
-  populateParentSelect(PREFIX, id);
-  setFormData(PREFIX, id);
-  document.getElementById('sidebar-form-title').textContent = '✏ Edit Anggota';
-  // scroll sidebar to top so user sees the form
-  document.querySelector('.sidebar').scrollTo({ top: 0, behavior: 'smooth' });
-  document.getElementById('f-name').focus();
-}
-
-/* ── CRUD: save ───────────────────────────────── */
-function handleSave() {
-  const data = getFormData(PREFIX);
-  if (!data.name) { toast('Nama tidak boleh kosong!', 'error'); return; }
-
-  if (editingId) {
-    update(editingId, data);
-    toast(`✓ ${data.name} diperbarui`);
-  } else {
-    create(data);
-    toast(`✓ ${data.name} ditambahkan`);
-  }
-
-  editingId = null;
-  clearFormData(PREFIX);
-  populateParentSelect(PREFIX, null);
-  document.getElementById('sidebar-form-title').textContent = '✚ Tambah Anggota';
-  refresh();
-}
-
-/* ── CRUD: delete ─────────────────────────────── */
-function startDelete(id) {
-  const m = getAll().find(x => x.id === id);
-  if (!m) return;
-  openConfirm(m.name, () => {
-    remove(id);
-    toast(`${m.name} dihapus`, 'warn');
-    if (editingId === id) startAdd();
+/* ── add ─────────────────────────────────────── */
+function handleAdd() {
+  openAddModal(data => {
+    const m = create(data);
+    toast(`✓ ${m.name} ditambahkan`);
     refresh();
   });
 }
@@ -97,43 +69,55 @@ function startDelete(id) {
 /* ── view toggle ──────────────────────────────── */
 function setView(mode) {
   viewMode = mode;
-  document.getElementById('btn-tree').classList.toggle('active', mode === 'tree');
-  document.getElementById('btn-list').classList.toggle('active', mode === 'list');
-  document.getElementById('view-tree').hidden = mode !== 'tree';
-  document.getElementById('view-list').hidden = mode !== 'list';
-  document.getElementById('tree-controls').style.display = mode === 'tree' ? '' : 'none';
+  ['vtree','ttree','list'].forEach(v => {
+    document.getElementById(`btn-${v}`).classList.toggle('active', v === mode);
+    document.getElementById(`view-${v}`).hidden = v !== mode;
+  });
+  const treeCtrl = document.getElementById('tree-controls');
+  treeCtrl.style.display = mode === 'ttree' ? '' : 'none';
   refresh();
 }
 
-/* ── expand / collapse all ────────────────────── */
-function expandAll() {
-  getAll().forEach(m => expandedSet.add(m.id));
-  refresh();
+/* ── expand / collapse ────────────────────────── */
+function expandAll()  { getAll().forEach(m=>expandedSet.add(m.id)); refresh(); }
+function collapseAll(){ expandedSet.clear(); refresh(); }
+
+/* ── zoom visual tree ─────────────────────────── */
+let zoomLevel = 1;
+function setZoom(z) {
+  zoomLevel = Math.min(2, Math.max(0.3, z));
+  const wrap = document.getElementById('vtree-wrap');
+  wrap.style.transformOrigin = '0 0';
+  const inner = wrap.querySelector('div');
+  if (inner) inner.style.transform = `scale(${zoomLevel})`;
 }
-function collapseAll() {
-  expandedSet.clear();
+
+/* ── search ───────────────────────────────────── */
+function handleSearch(q) {
+  searchQuery = q;
   refresh();
 }
 
 /* ── dark mode ────────────────────────────────── */
 function initDarkMode() {
   const saved = localStorage.getItem('darkMode');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const prefersDark = window.matchMedia('(prefers-color-scheme:dark)').matches;
   const dark = saved !== null ? saved === 'true' : prefersDark;
-  if (dark) document.documentElement.setAttribute('data-theme', 'dark');
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
   document.getElementById('dark-toggle').textContent = dark ? '☀' : '🌙';
 }
-
 function toggleDark() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
   localStorage.setItem('darkMode', String(!isDark));
   document.getElementById('dark-toggle').textContent = isDark ? '🌙' : '☀';
+  // re-render visual tree for colors
+  if (viewMode === 'vtree') renderVisualTree(currentList(), id => openDetail(id));
 }
 
-/* ── export / import / reset ──────────────────── */
+/* ── export / reset ───────────────────────────── */
 function doExport() {
-  const blob = new Blob([exportJSON()], { type: 'application/json;charset=utf-8' });
+  const blob = new Blob([exportJSON()], {type:'application/json;charset=utf-8'});
   const a = Object.assign(document.createElement('a'), {
     href: URL.createObjectURL(blob),
     download: `silsilah_${Date.now()}.json`,
@@ -143,107 +127,54 @@ function doExport() {
   toast('✓ JSON diunduh');
 }
 
-function doImport(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    try {
-      importJSON(ev.target.result);
-      expandedSet.clear();
-      getAll().filter(m => m.gen <= 2).forEach(m => expandedSet.add(m.id));
-      toast('✓ Data berhasil diimpor');
-      refresh();
-    } catch (err) {
-      toast(`Error: ${err.message}`, 'error');
-    }
-  };
-  reader.readAsText(file);
-  e.target.value = '';
-}
-
 async function doReset() {
-  if (!confirm('Reset semua data ke data awal? Semua perubahan akan hilang.')) return;
+  if (!confirm('Reset semua data ke data awal? Semua perubahan hilang.')) return;
   try {
     const res = await fetch('./data/family.json');
-    if (!res.ok) throw new Error('Tidak dapat memuat family.json');
+    if (!res.ok) throw new Error('family.json tidak ditemukan');
     const data = await res.json();
     resetToDefault(data);
     expandedSet.clear();
-    data.filter(m => m.gen <= 2).forEach(m => expandedSet.add(m.id));
-    toast('✓ Data direset ke awal');
-    startAdd();
+    getAll().filter(m=>m.gen<=2).forEach(m=>expandedSet.add(m.id));
+    toast('✓ Data direset');
     refresh();
-  } catch (err) {
-    toast(err.message, 'error');
-  }
+  } catch(e) { toast(e.message,'error'); }
 }
 
-/* ── bind events ──────────────────────────────── */
-function bindEvents() {
-  // sidebar form
-  document.getElementById('btn-save').onclick  = handleSave;
-  document.getElementById('btn-clear').onclick = startAdd;
-
-  // Enter key in name field
-  document.getElementById('f-name').addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); handleSave(); }
-  });
-
-  // views
-  document.getElementById('btn-tree').onclick = () => setView('tree');
-  document.getElementById('btn-list').onclick = () => setView('list');
-
-  // expand/collapse
+/* ── bind ────────────────────────────────────── */
+function bind() {
+  document.getElementById('btn-add').onclick = handleAdd;
+  document.getElementById('btn-vtree').onclick = () => setView('vtree');
+  document.getElementById('btn-ttree').onclick = () => setView('ttree');
+  document.getElementById('btn-list').onclick  = () => setView('list');
   document.getElementById('btn-expand-all').onclick   = expandAll;
   document.getElementById('btn-collapse-all').onclick = collapseAll;
-
-  // search
-  document.getElementById('search-input').addEventListener('input', e => {
-    searchQuery = e.target.value;
-    refresh();
-  });
-
-  // filter
+  document.getElementById('btn-zoom-in').onclick  = () => setZoom(zoomLevel+0.15);
+  document.getElementById('btn-zoom-out').onclick = () => setZoom(zoomLevel-0.15);
+  document.getElementById('btn-zoom-reset').onclick = () => setZoom(1);
+  document.getElementById('search-input').addEventListener('input', e => handleSearch(e.target.value));
   document.getElementById('filter-parent').addEventListener('change', e => {
-    filterPid = e.target.value;
-    refresh();
+    filterPid = e.target.value; refresh();
   });
-
-  // dark mode
   document.getElementById('dark-toggle').onclick = toggleDark;
-
-  // export / import / reset
-  document.getElementById('btn-export').onclick = doExport;
-  document.getElementById('btn-import').onclick = () =>
-    document.getElementById('import-input').click();
-  document.getElementById('import-input').addEventListener('change', doImport);
-  document.getElementById('btn-reset').onclick = doReset;
-
-  // confirm modal close
-  document.getElementById('confirm-cancel').onclick = () =>
-    document.getElementById('confirm-modal-overlay').classList.remove('open');
-  document.querySelector('#confirm-modal-overlay').addEventListener('click', e => {
-    if (e.target === e.currentTarget)
-      e.currentTarget.classList.remove('open');
-  });
-
-  // keyboard
+  document.getElementById('btn-export').onclick  = doExport;
+  document.getElementById('btn-reset').onclick   = doReset;
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape')
-      document.getElementById('confirm-modal-overlay').classList.remove('open');
+    if (e.key==='Escape') {
+      document.getElementById('detail-overlay').classList.remove('open');
+      document.getElementById('confirm-overlay').classList.remove('open');
+      document.getElementById('add-overlay').classList.remove('open');
+    }
   });
 }
 
-/* ── init ─────────────────────────────────────── */
+/* ── init ────────────────────────────────────── */
 async function init() {
   await bootstrap();
   initDarkMode();
-  bindEvents();
-  populateParentSelect(PREFIX, null);
-  // default: gen 1 & 2 expanded
-  getAll().filter(m => m.gen <= 2).forEach(m => expandedSet.add(m.id));
-  setView('tree');
+  bind();
+  getAll().filter(m=>m.gen<=2).forEach(m=>expandedSet.add(m.id));
+  setView('vtree');
 }
 
 init();

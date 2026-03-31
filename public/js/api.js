@@ -1,121 +1,103 @@
 /**
  * api.js — Data layer
  * Loads from data/family.json on first run,
- * persists everything to localStorage afterward.
+ * then persists all changes to localStorage.
  */
 
-const STORAGE_KEY = 'kromohardjo_family';
+const STORAGE_KEY = 'kromohardjo_v2';
 const JSON_URL    = './data/family.json';
 
-/* ── helpers ─────────────────────────────────── */
-const genId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+const genId = () => `${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
 
-/* ── bootstrap ───────────────────────────────── */
+/* bootstrap: load seed JSON once, then always use localStorage */
 async function bootstrap() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) return JSON.parse(stored);
-
+  if (localStorage.getItem(STORAGE_KEY)) return getAll();
   try {
-    const res  = await fetch(JSON_URL);
-    if (!res.ok) throw new Error('fetch failed');
+    const res = await fetch(JSON_URL);
+    if (!res.ok) throw new Error();
     const data = await res.json();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    saveAll(data);
     return data;
   } catch {
-    // offline / static host without the file — return empty seed
-    const seed = [];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(seed));
-    return seed;
+    saveAll([]);
+    return [];
   }
 }
 
-/* ── read ────────────────────────────────────── */
 function getAll() {
   return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 }
-
 function getById(id) {
   return getAll().find(m => m.id === id) || null;
 }
-
-/* ── write helpers ───────────────────────────── */
 function saveAll(list) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 }
 
-/* ── CRUD ────────────────────────────────────── */
+/* CRUD */
 function create(data) {
-  const list   = getAll();
-  const member = { id: genId(), ...data };
-  list.push(member);
+  const list = getAll();
+  const m = { id: genId(), ...data };
+  list.push(m);
   saveAll(list);
-  return member;
+  return m;
 }
-
 function update(id, patch) {
   const list = getAll();
-  const idx  = list.findIndex(m => m.id === id);
-  if (idx === -1) throw new Error(`Member ${id} not found`);
-  list[idx] = { ...list[idx], ...patch };
+  const i = list.findIndex(m => m.id === id);
+  if (i < 0) return null;
+  list[i] = { ...list[i], ...patch };
   saveAll(list);
-  return list[idx];
+  return list[i];
 }
-
 function remove(id) {
   let list = getAll();
-  // re-parent children to removed node's parent
-  const target = list.find(m => m.id === id);
-  if (!target) return false;
-  list = list
-    .filter(m => m.id !== id)
-    .map(m => m.parentId === id ? { ...m, parentId: target.parentId } : m);
+  const t = list.find(m => m.id === id);
+  if (!t) return false;
+  list = list.filter(m => m.id !== id)
+             .map(m => m.parentId === id ? { ...m, parentId: t.parentId } : m);
   saveAll(list);
   return true;
 }
 
-/* ── search / filter ─────────────────────────── */
-function search(query) {
-  const q = query.trim().toLowerCase();
-  if (!q) return getAll();
+/* search */
+function search(q) {
+  const lq = q.trim().toLowerCase();
+  if (!lq) return getAll();
   return getAll().filter(m =>
-    m.name.toLowerCase().includes(q)  ||
-    (m.spouse && m.spouse.toLowerCase().includes(q)) ||
-    (m.notes  && m.notes.toLowerCase().includes(q))
+    m.name.toLowerCase().includes(lq) ||
+    (m.spouse && m.spouse.toLowerCase().includes(lq)) ||
+    (m.notes  && m.notes.toLowerCase().includes(lq))
   );
 }
 
-function filterByParent(parentId) {
-  if (!parentId || parentId === '__all__') return getAll();
-  return getAll().filter(m => m.parentId === parentId);
+/* tree */
+function buildTree(list, parentId = null) {
+  return (list || getAll())
+    .filter(m => (m.parentId ?? null) === parentId)
+    .map(m => ({ ...m, children: buildTree(list || getAll(), m.id) }))
+    .sort((a,b) => (a.gen??99)-(b.gen??99) || a.name.localeCompare(b.name));
 }
 
-/* ── tree builder ────────────────────────────── */
-function buildTree(list = getAll(), parentId = null) {
-  return list
-    .filter(m => m.parentId === parentId)
-    .map(m => ({ ...m, children: buildTree(list, m.id) }))
-    .sort((a, b) => (a.gen ?? 99) - (b.gen ?? 99) || a.name.localeCompare(b.name));
-}
+/* export / reset */
+function exportJSON() { return JSON.stringify(getAll(), null, 2); }
+function resetToDefault(data) { saveAll(data); }
 
-/* ── import / export ─────────────────────────── */
-function exportJSON() {
-  return JSON.stringify(getAll(), null, 2);
-}
-
-function importJSON(jsonStr) {
-  const data = JSON.parse(jsonStr);
-  if (!Array.isArray(data)) throw new Error('JSON harus berupa array');
-  saveAll(data);
-  return data;
-}
-
-function resetToDefault(data) {
-  saveAll(data);
+/* stats */
+function getStats() {
+  const all = getAll();
+  return {
+    total:    all.length,
+    deceased: all.filter(m => m.deceased).length,
+    married:  all.filter(m => m.spouse).length,
+    alive:    all.filter(m => !m.deceased).length,
+    gens:     [...new Set(all.map(m => m.gen))].length,
+  };
 }
 
 export {
-  bootstrap, getAll, getById,
+  bootstrap, getAll, getById, saveAll,
   create, update, remove,
-  search, filterByParent, buildTree,
-  exportJSON, importJSON, resetToDefault,
+  search, buildTree,
+  exportJSON, resetToDefault, getStats,
 };
