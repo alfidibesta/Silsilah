@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aplikasi Silsilah Keluarga Mbah Kromohardjo">
+  <title>Silsilah Keluarga · Mbah Kromohardjo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <h1>
+    <small>Silsilah Keluarga</small>
+    Mbah Kromohardjo
+  </h1>
+  <div class="header-actions">
+    <button id="dark-toggle" title="Toggle dark mode">🌙</button>
+  </div>
+</header>
+
+<!-- APP LAYOUT -->
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- Inline Form -->
+    <div>
+      <div class="sidebar-title" id="sidebar-form-title">✚ Tambah Anggota</div>
+      <div class="modal-form" style="margin-top:12px;">
+        <div class="form-group">
+          <label for="f-name">Nama *</label>
+          <input type="text" id="f-name" placeholder="Nama lengkap" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="f-spouse">Pasangan</label>
+          <input type="text" id="f-spouse" placeholder="Nama pasangan">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-gen">Generasi</label>
+            <select id="f-gen">
+              <option value="1">Gen I</option>
+              <option value="2" selected>Gen II</option>
+              <option value="3">Gen III</option>
+              <option value="4">Gen IV</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-parent">Orang Tua</label>
+            <select id="f-parent"><option value="">— root —</option></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="f-notes">Catatan</label>
+          <textarea id="f-notes" rows="2" placeholder="Keterangan tambahan…"></textarea>
+        </div>
+        <label class="check-row" style="margin-bottom:4px;">
+          <input type="checkbox" id="f-deceased">
+          Almarhum / Almarhumah
+        </label>
+        <div class="form-actions" style="margin-top:8px;">
+          <button class="btn btn--primary" id="btn-save">💾 Simpan</button>
+          <button class="btn btn--secondary" id="btn-clear">✕ Batal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Tools -->
+    <div>
+      <div class="sidebar-title">⚙ Data</div>
+      <div class="data-tools" style="margin-top:10px;">
+        <button class="btn btn--success" id="btn-export">⬇ Ekspor JSON</button>
+        <button class="btn btn--secondary" id="btn-import">⬆ Impor JSON</button>
+        <button class="btn btn--warn" id="btn-reset">↺ Reset ke Data Awal</button>
+        <input type="file" id="import-input" accept=".json" hidden>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div>
+      <div class="sidebar-title">📊 Statistik</div>
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
+        <div class="stat-card" style="flex-direction:row;justify-content:space-between;min-width:0;width:100%;">
+          <span class="stat-label">Total Anggota</span>
+          <span class="stat-num" id="stat-total" style="font-size:18px;">—</span>
+        </div>
+        <div class="stat-card" style="flex-direction:row;justify-content:space-between;min-width:0;width:100%;">
+          <span class="stat-label">Almarhum</span>
+          <span class="stat-num" id="stat-deceased" style="font-size:18px;">—</span>
+        </div>
+        <div class="stat-card" style="flex-direction:row;justify-content:space-between;min-width:0;width:100%;">
+          <span class="stat-label">Generasi</span>
+          <span class="stat-num" id="stat-gens" style="font-size:18px;">—</span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="btn btn--secondary active" id="btn-tree">🌳 Tree</button>
+        <button class="btn btn--secondary" id="btn-list">☰ List</button>
+      </div>
+
+      <div class="toolbar-sep"></div>
+
+      <div class="toolbar-group" id="tree-controls">
+        <button class="btn btn--ghost btn--icon" id="btn-expand-all"   title="Buka semua">⊞</button>
+        <button class="btn btn--ghost btn--icon" id="btn-collapse-all" title="Tutup semua">⊟</button>
+      </div>
+
+      <div class="toolbar-sep"></div>
+
+      <div class="toolbar-group search-wrap">
+        <input type="text" id="search-input" placeholder="Cari nama, pasangan…" style="width:200px;">
+      </div>
+
+      <div class="toolbar-group" style="align-items:center;gap:6px;">
+        <label style="font-size:11.5px;color:var(--ink-3);white-space:nowrap;">Parent:</label>
+        <select id="filter-parent" style="width:auto;padding:5px 10px;font-size:12px;">
+          <option value="__all__">Semua</option>
+        </select>
+      </div>
+
+      <div class="toolbar-spacer"></div>
+    </div>
+
+    <!-- Tree view -->
+    <div id="view-tree">
+      <div id="tree-root"></div>
+    </div>
+
+    <!-- List view -->
+    <div id="view-list" hidden>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Gen</th>
+              <th>Orang Tua</th>
+              <th>Catatan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="list-body"></tbody>
+        </table>
+        <div id="list-empty" hidden style="text-align:center;padding:40px;color:var(--ink-3);font-style:italic;">
+          Tidak ada anggota ditemukan.
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- CONFIRM DELETE MODAL -->
+<div class="modal-overlay" id="confirm-modal-overlay">
+  <div class="modal" style="max-width:380px;">
+    <h2>Konfirmasi Hapus</h2>
+    <p class="confirm-body" style="margin-bottom:12px;">
+      Hapus <strong id="confirm-name"></strong>?<br>
+      <span style="font-size:12px;color:var(--ink-3);">Anak-anaknya akan dipindahkan ke parent yang sama.</span>
+    </p>
+    <div class="modal-actions">
+      <button class="btn btn--secondary" id="confirm-cancel">Batal</button>
+      <button class="btn btn--danger"    id="confirm-ok">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
